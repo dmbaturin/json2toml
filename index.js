@@ -11,8 +11,8 @@ function format(obj) {
     : JSON.stringify(obj);
 }
 
-module.exports = function(hash, indent=0, newline_after_section=false) {
-  function visit(hash, prefix, indent, newline_after_section) {
+module.exports = function(hash, options={}) {
+  function visit(hash, prefix) {
     var nestedPairs = [];
     var simplePairs = [];
 
@@ -23,7 +23,7 @@ module.exports = function(hash, indent=0, newline_after_section=false) {
 
     if (!(isEmpty(prefix) || isEmpty(simplePairs))) {
       toml += '[' + prefix + ']\n';
-      var indent_str = "".padStart(indent, " ");
+      var indent_str = "".padStart(options.indent, " ");
     }
 
     forEach(simplePairs, function(array) {
@@ -33,7 +33,7 @@ module.exports = function(hash, indent=0, newline_after_section=false) {
       toml += indent_str + key + ' = ' + format(value) + '\n';
     });
 
-    if (!isEmpty(simplePairs) && newline_after_section) {
+    if (!isEmpty(simplePairs) && options.newline_after_section) {
       toml += '\n';
     }
 
@@ -41,13 +41,13 @@ module.exports = function(hash, indent=0, newline_after_section=false) {
       var key = array[0];
       var value = array[1];
 
-      visit(value, isEmpty(prefix) ? key.toString() : [prefix, key].join('.'), indent, newline_after_section);
+      visit(value, isEmpty(prefix) ? key.toString() : [prefix, key].join('.'));
     });
   }
 
   var toml = '';
 
-  visit(hash, '', indent, newline_after_section);
+  visit(hash, '');
 
   return toml.trim();
 };
