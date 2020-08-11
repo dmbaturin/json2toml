@@ -33,7 +33,7 @@ module.exports = function(hash, options={}) {
       toml += indent_str + key + ' = ' + format(value) + '\n';
     });
 
-    if (!isEmpty(simplePairs) && options.newline_after_section) {
+    if (!isEmpty(simplePairs) && options.newlineAfterSection) {
       toml += '\n';
     }
 
